@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -28,6 +29,7 @@ public class MainActivity extends Activity implements OnClickListener {
         @Override
         public void run() {
             hideResult();
+            initCampus();
             if (mQuestionSeries.getCurrentQuestion().correctOrNot()) {
                 setNextQuestion();
             }
@@ -41,7 +43,7 @@ public class MainActivity extends Activity implements OnClickListener {
         public void run() {
             endTime = System.currentTimeMillis();
             elapsedTime = endTime - startTime;
-            textCounter.setText(getElapsedTimeFormat(elapsedTime));
+            mTextCounter.setText(getElapsedTimeFormat(elapsedTime));
             if (mQuestionSeries.isFinished()) {
                 showFinishedDialog();
             }
@@ -51,7 +53,8 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     };
 
-    private TextView textCounter;
+    private LinearLayout mImageCampus;
+    private TextView mTextCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +82,14 @@ public class MainActivity extends Activity implements OnClickListener {
             case R.id.button3:
             case R.id.button4:
             case R.id.button5:
+                paintCampus(((Integer) v.getTag()).intValue());
+                break;
+            case R.id.buttonEraser:
+                initCampus();
+                break;
+            case R.id.buttonPaint:
                 if (mQuestionSeries.getCurrentQuestion().checkPlayerAnswer(
-                        ((Integer) v.getTag()).intValue())) {
+                        ((Integer) (mImageCampus.getTag())).intValue())) {
                     showResultAndNextQuestion(true);
                 }
                 else {
@@ -90,6 +99,18 @@ public class MainActivity extends Activity implements OnClickListener {
             default:
                 break;
         }
+    }
+
+    private void paintCampus(int color) {
+        int colorCampus = ((Integer) (mImageCampus.getTag())).intValue();
+        if (colorCampus == Color.parseColor("white")) {
+            colorCampus = color;
+        }
+        else {
+            colorCampus |= color;
+        }
+        mImageCampus.setTag(Integer.valueOf(colorCampus));
+        mImageCampus.setBackgroundColor(colorCampus);
     }
 
     private void setParts() {
@@ -109,7 +130,14 @@ public class MainActivity extends Activity implements OnClickListener {
         button5.setOnClickListener(this);
         button5.setVisibility(View.GONE);
 
-        textCounter = (TextView) findViewById(R.id.textCounter);
+        ImageButton buttonEraser = (ImageButton) findViewById(R.id.buttonEraser);
+        buttonEraser.setOnClickListener(this);
+        ImageButton buttonPaint = (ImageButton) findViewById(R.id.buttonPaint);
+        buttonPaint.setOnClickListener(this);
+
+        mImageCampus = (LinearLayout) findViewById(R.id.linearLayoutCampus);
+        initCampus();
+        mTextCounter = (TextView) findViewById(R.id.textCounter);
     }
 
     private String getElapsedTimeFormat(long time) {
@@ -151,12 +179,18 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     }
 
+    private void initCampus() {
+        mImageCampus.setTag(Color.parseColor("white"));
+        mImageCampus.setBackgroundColor(Color.parseColor("white"));
+    }
+
     private void initCounter() {
-        textCounter.setText(getElapsedTimeFormat(0));
+        mTextCounter.setText(getElapsedTimeFormat(0));
     }
 
     private void initQuestion() {
         hideResult();
+        initCampus();
         initCounter();
         mQuestionSeries = new QuestionSeries(0);
         setNextQuestion();

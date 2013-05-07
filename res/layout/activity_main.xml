@@ -45,6 +45,47 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/layoutCampus"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white" >
+
+        <LinearLayout
+            android:id="@+id/linearLayoutCampus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/black" >
+
+            <TextView
+                android:id="@+id/textCampus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/buttonEraser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/buttonPaint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_launcher" />
+
+    </RelativeLayout>
+
     <!-- choice -->
     <RelativeLayout
         android:id="@+id/layoutChoice"
