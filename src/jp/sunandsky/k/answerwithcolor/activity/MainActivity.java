@@ -25,7 +25,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private Context mContext = this;
     private Handler mHandler;
     private QuestionSeries mQuestionSeries;
-    private Runnable nextQuestionTask = new Runnable() {
+    private Runnable mNextQuestionTask = new Runnable() {
         @Override
         public void run() {
             hideResult();
@@ -35,20 +35,20 @@ public class MainActivity extends Activity implements OnClickListener {
             }
         }
     };
-    private long startTime = System.currentTimeMillis();
-    private long endTime;
-    private long elapsedTime;
-    private Runnable counterTask = new Runnable() {
+    private long mStartTime;
+    private long mEndTime;
+    private long mElapsedTime;
+    private Runnable mCounterTask = new Runnable() {
         @Override
         public void run() {
-            endTime = System.currentTimeMillis();
-            elapsedTime = endTime - startTime;
-            mTextCounter.setText(getElapsedTimeFormat(elapsedTime));
+            mEndTime = System.currentTimeMillis();
+            mElapsedTime = mEndTime - mStartTime;
+            mTextCounter.setText(getElapsedTimeFormat(mElapsedTime));
             if (mQuestionSeries.isFinished()) {
                 showFinishedDialog();
             }
             else {
-                mHandler.postDelayed(counterTask, 10);
+                mHandler.postDelayed(mCounterTask, 10);
             }
         }
     };
@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void setNextQuestionTimer() {
-        mHandler.postDelayed(nextQuestionTask, DURATION_BETWEEN_QUESTIONS);
+        mHandler.postDelayed(mNextQuestionTask, DURATION_BETWEEN_QUESTIONS);
     }
 
     private void showResultAndNextQuestion(boolean result) {
@@ -185,6 +185,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void initCounter() {
+        mElapsedTime = 0;
         mTextCounter.setText(getElapsedTimeFormat(0));
     }
 
@@ -194,11 +195,15 @@ public class MainActivity extends Activity implements OnClickListener {
         initCounter();
         mQuestionSeries = new QuestionSeries(0);
         setNextQuestion();
-        mHandler.post(counterTask);
+        mHandler.post(mCounterTask);
     }
 
     private void setNextQuestion() {
         mQuestionSeries.addNewQuestion();
+        if (mQuestionSeries.isFirstQuestion()) {
+            mStartTime = System.currentTimeMillis();
+            initCounter();
+        }
         TextView textQuestion = (TextView) findViewById(R.id.textQuestion);
         textQuestion.setText(mQuestionSeries.getCurrentQuestion().getStringQuestion());
         textQuestion.setTextColor(mQuestionSeries.getCurrentQuestion().getColorQuestion());
@@ -207,7 +212,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private void showFinishedDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
         alertDialogBuilder.setTitle("けっか");
-        alertDialogBuilder.setMessage(getElapsedTimeFormat(elapsedTime));
+        alertDialogBuilder.setMessage(getElapsedTimeFormat(mElapsedTime));
         alertDialogBuilder.setPositiveButton("もういっかい", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

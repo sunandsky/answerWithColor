@@ -39,6 +39,13 @@ public class QuestionSeries {
         return arrayQuestion.get(arrayQuestion.size() - 1);
     }
 
+    public boolean isFirstQuestion() {
+        if (arrayQuestion.size() == 1) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean isFinalQuestion() {
         if (arrayQuestion.size() > mQuestionNumber) {
             return true;
