@@ -8,24 +8,26 @@ import android.graphics.Color;
 public class Question {
     private static final String TAG = Question.class.getSimpleName();
 
-    private static final int stringIdNum = 3;
-    private static final int colorIdNum = 3;
-    private static final String[] stringMember = {
-            "あか", "みどり", "あお"
-    };
-    private static final String[] colorMember = {
-            "red", "green", "blue"
-    };
+    protected static final String RED = "あか";
+    protected static final String GREEN = "みどり";
+    protected static final String BLUE = "あお";
+    protected static final String MAGENTA = "まじぇんだ";
+    protected static final String YELLOW = "きいろ";
+    protected static final String CYAN = "しあん";
+    protected static final String WHITE = "しろ";
+
+    protected int mLevel;
+    protected int mNumber;
 
     private String stringQuestion;
     private int colorQuestion;
     private int correctAnswer;
     private int playerAnswer;
 
-    public Question() {
+    public Question(String[] stringMember, String[] colorMember) {
         this.stringQuestion = stringMember[makeQuestionStringId(stringMember.length)];
         this.colorQuestion = Color.parseColor(colorMember[makeQuestionColorId(colorMember.length)]);
-        this.correctAnswer = makeCorrectAnswer(this.stringQuestion);
+        this.correctAnswer = makeCorrectAnswer(this.stringQuestion, stringMember, colorMember);
     }
 
     private static int makeQuestionStringId(int number) {
@@ -38,7 +40,8 @@ public class Question {
         return randam.nextInt(number);
     }
 
-    private static int makeCorrectAnswer(String question) {
+    private static int makeCorrectAnswer(String question, String[] stringMember,
+            String[] colorMember) {
         int i = 0;
         for (String str : stringMember) {
             if (str.equals(question)) {

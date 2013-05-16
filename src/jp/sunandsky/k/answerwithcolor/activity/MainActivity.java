@@ -193,7 +193,7 @@ public class MainActivity extends Activity implements OnClickListener {
         hideResult();
         initCampus();
         initCounter();
-        mQuestionSeries = new QuestionSeries(0);
+        mQuestionSeries = new QuestionSeries(QuestionSeries.LEVEL_3);
         setNextQuestion();
         mHandler.post(mCounterTask);
     }
