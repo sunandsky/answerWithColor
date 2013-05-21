@@ -16,6 +16,7 @@ public class QuestionLevel1 extends Question {
     public QuestionLevel1() {
         super(stringMember, colorMember);
         this.mLevel = 1;
+        this.mShuffle = false;
     }
 
     public static int getNumber() {

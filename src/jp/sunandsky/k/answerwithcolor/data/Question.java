@@ -18,6 +18,7 @@ public class Question {
 
     protected int mLevel;
     protected int mNumber;
+    public boolean mShuffle;
 
     private String stringQuestion;
     private int colorQuestion;
@@ -36,8 +37,8 @@ public class Question {
     }
 
     private static int makeQuestionColorId(int number) {
-        Random randam = new Random();
-        return randam.nextInt(number);
+        Random random = new Random();
+        return random.nextInt(number);
     }
 
     private static int makeCorrectAnswer(String question, String[] stringMember,

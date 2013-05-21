@@ -1,6 +1,8 @@
 
 package jp.sunandsky.k.answerwithcolor.activity;
 
+import java.util.ArrayList;
+
 import jp.sunandsky.k.answerwithcolor.R;
 import jp.sunandsky.k.answerwithcolor.data.QuestionSeries;
 import android.app.Activity;
@@ -24,6 +26,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private Context mContext = this;
     private Handler mHandler;
+    private int mSelectedLevel = QuestionSeries.LEVEL_3;
     private QuestionSeries mQuestionSeries;
     private Runnable mNextQuestionTask = new Runnable() {
         @Override
@@ -53,17 +56,34 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     };
 
+    TextView mTextQuestion;
+    private ArrayList<ImageButton> mArrayPallet = new ArrayList<ImageButton>();
+    private ImageButton mButton1;
+    private ImageButton mButton2;
+    private ImageButton mButton3;
+    private ImageButton mButton4;
+    private ImageButton mButton5;
     private LinearLayout mImageCampus;
     private TextView mTextCounter;
+    private static final String[] colorPallet = {
+            "red", "green", "blue"
+    };
+    private static final String[] colorPalletDefault = {
+            "red", "green", "blue"
+    };
+    private static final int[] resourcePalletDefault = {
+            R.drawable.red, R.drawable.green, R.drawable.blue
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setParts();
+        initParts();
         mHandler = new Handler();
 
         initQuestion();
+        showStartDialog();
     }
 
     @Override
@@ -113,22 +133,23 @@ public class MainActivity extends Activity implements OnClickListener {
         mImageCampus.setBackgroundColor(colorCampus);
     }
 
-    private void setParts() {
-        ImageButton button1 = (ImageButton) findViewById(R.id.button1);
-        button1.setOnClickListener(this);
-        button1.setTag(Integer.valueOf(Color.parseColor("red")));
-        ImageButton button2 = (ImageButton) findViewById(R.id.button2);
-        button2.setOnClickListener(this);
-        button2.setTag(Integer.valueOf(Color.parseColor("green")));
-        ImageButton button3 = (ImageButton) findViewById(R.id.button3);
-        button3.setOnClickListener(this);
-        button3.setTag(Integer.valueOf(Color.parseColor("blue")));
-        ImageButton button4 = (ImageButton) findViewById(R.id.button4);
-        button4.setOnClickListener(this);
-        button4.setVisibility(View.GONE);
-        ImageButton button5 = (ImageButton) findViewById(R.id.button5);
-        button5.setOnClickListener(this);
-        button5.setVisibility(View.GONE);
+    private void initParts() {
+        mTextQuestion = (TextView) findViewById(R.id.textQuestion);
+
+        mButton1 = (ImageButton) findViewById(R.id.button1);
+        mButton1.setOnClickListener(this);
+        mArrayPallet.add(mButton1);
+        mButton2 = (ImageButton) findViewById(R.id.button2);
+        mButton2.setOnClickListener(this);
+        mArrayPallet.add(mButton2);
+        mButton3 = (ImageButton) findViewById(R.id.button3);
+        mButton3.setOnClickListener(this);
+        mArrayPallet.add(mButton3);
+
+        mButton4 = (ImageButton) findViewById(R.id.button4);
+        mButton4.setOnClickListener(this);
+        mButton5 = (ImageButton) findViewById(R.id.button5);
+        mButton5.setOnClickListener(this);
 
         ImageButton buttonEraser = (ImageButton) findViewById(R.id.buttonEraser);
         buttonEraser.setOnClickListener(this);
@@ -190,11 +211,17 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void initQuestion() {
+        mTextQuestion.setText("");
+
         hideResult();
         initCampus();
         initCounter();
-        mQuestionSeries = new QuestionSeries(QuestionSeries.LEVEL_3);
+    }
+
+    private void setQuestion() {
+        mQuestionSeries = new QuestionSeries(this.mSelectedLevel);
         setNextQuestion();
+        showPallet();
         mHandler.post(mCounterTask);
     }
 
@@ -204,9 +231,83 @@ public class MainActivity extends Activity implements OnClickListener {
             mStartTime = System.currentTimeMillis();
             initCounter();
         }
-        TextView textQuestion = (TextView) findViewById(R.id.textQuestion);
-        textQuestion.setText(mQuestionSeries.getCurrentQuestion().getStringQuestion());
-        textQuestion.setTextColor(mQuestionSeries.getCurrentQuestion().getColorQuestion());
+        mTextQuestion.setText(mQuestionSeries.getCurrentQuestion().getStringQuestion());
+        mTextQuestion.setTextColor(mQuestionSeries.getCurrentQuestion().getColorQuestion());
+        updatePallet();
+    }
+
+    private void showPallet() {
+        for (ImageButton button : mArrayPallet) {
+            button.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updatePallet() {
+        if (mQuestionSeries.getCurrentQuestion().mShuffle) {
+            shufflePallet();
+        }
+        else {
+            if (mQuestionSeries.isFirstQuestion()) {
+                fixPallet();
+            }
+        }
+    }
+
+    private int getButtonResource(ImageButton button, String color) {
+        int i = 0;
+        for (int resource : resourcePalletDefault) {
+            if (color.equals(colorPalletDefault[i])) {
+                return resource;
+            }
+            i++;
+        }
+        return 0;
+    }
+
+    private void fixPallet() {
+        setPallet(colorPalletDefault);
+    }
+
+    private static <T> void shuffle(T[] array) {
+        for (int i = 0; i < array.length; i++) {
+            int dst = (int) Math.floor(Math.random() * (i + 1));
+            swap(array, i, dst);
+        }
+    }
+
+    private static <T> void swap(T[] array, int i, int j) {
+        T tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private void setPallet(String[] colorArray) {
+        int i = 0;
+        for (ImageButton button : mArrayPallet) {
+            button.setTag(Integer.valueOf(Color.parseColor(colorArray[i])));
+            button.setBackgroundResource(getButtonResource(button, colorArray[i]));
+            i++;
+        }
+    }
+
+    private void shufflePallet() {
+        shuffle(colorPallet);
+        setPallet(colorPallet);
+    }
+
+    private void showStartDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setTitle("よーい");
+        alertDialogBuilder.setMessage("れべる " + this.mSelectedLevel);
+        alertDialogBuilder.setPositiveButton("すたーと", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setQuestion();
+            }
+        });
+        alertDialogBuilder.setCancelable(false);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void showFinishedDialog() {
@@ -217,6 +318,7 @@ public class MainActivity extends Activity implements OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 initQuestion();
+                showStartDialog();
             }
         });
         alertDialogBuilder.setNegativeButton("やめる", new DialogInterface.OnClickListener() {
