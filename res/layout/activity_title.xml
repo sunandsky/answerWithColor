@@ -24,21 +24,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/level_1"
-            android:background="@drawable/ic_launcher" />
+            android:background="@drawable/level_stateful" />
 
         <Button
             android:id="@+id/buttonLevel2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/level_2"
-            android:background="@drawable/ic_launcher" />
+            android:background="@drawable/level_stateful" />
 
         <Button
             android:id="@+id/buttonLevel3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/level_3"
-            android:background="@drawable/ic_launcher" />
+            android:background="@drawable/level_stateful" />
     
     </LinearLayout>
 
