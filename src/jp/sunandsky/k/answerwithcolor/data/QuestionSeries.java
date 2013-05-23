@@ -68,7 +68,7 @@ public class QuestionSeries {
     }
 
     public boolean isFinalQuestion() {
-        if (arrayQuestion.size() > mQuestionNumber) {
+        if (arrayQuestion.size() >= mQuestionNumber) {
             return true;
         }
         return false;
