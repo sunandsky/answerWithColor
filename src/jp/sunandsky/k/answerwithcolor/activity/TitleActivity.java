@@ -14,6 +14,10 @@ import android.widget.Button;
 public class TitleActivity extends Activity implements OnClickListener {
     private static final String TAG = "TitleActivity";
 
+    private Button mButtonLevel1;
+    private Button mButtonLevel2;
+    private Button mButtonLevel3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +34,19 @@ public class TitleActivity extends Activity implements OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        resetParts();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonLevel3:
             case R.id.buttonLevel2:
             case R.id.buttonLevel1:
+                v.setSelected(true);
                 int level = 0;
                 if (v.getId() == R.id.buttonLevel1)
                     level = QuestionSeries.LEVEL_1;
@@ -52,11 +64,17 @@ public class TitleActivity extends Activity implements OnClickListener {
     }
 
     private void initParts() {
-        Button buttonLevel1 = (Button) findViewById(R.id.buttonLevel1);
-        buttonLevel1.setOnClickListener(this);
-        Button buttonLevel2 = (Button) findViewById(R.id.buttonLevel2);
-        buttonLevel2.setOnClickListener(this);
-        Button buttonLevel3 = (Button) findViewById(R.id.buttonLevel3);
-        buttonLevel3.setOnClickListener(this);
+        mButtonLevel1 = (Button) findViewById(R.id.buttonLevel1);
+        mButtonLevel1.setOnClickListener(this);
+        mButtonLevel2 = (Button) findViewById(R.id.buttonLevel2);
+        mButtonLevel2.setOnClickListener(this);
+        mButtonLevel3 = (Button) findViewById(R.id.buttonLevel3);
+        mButtonLevel3.setOnClickListener(this);
+    }
+
+    private void resetParts() {
+        mButtonLevel1.setSelected(false);
+        mButtonLevel2.setSelected(false);
+        mButtonLevel3.setSelected(false);
     }
 }

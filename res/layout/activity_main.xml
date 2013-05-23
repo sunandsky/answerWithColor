@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_launcher" />
+            android:src="@android:drawable/ic_menu_delete" />
 
         <ImageButton
             android:id="@+id/buttonPaint"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_launcher" />
+            android:src="@android:drawable/ic_menu_edit" />
 
     </RelativeLayout>
 
