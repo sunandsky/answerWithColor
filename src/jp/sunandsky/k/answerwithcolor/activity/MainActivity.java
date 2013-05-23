@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +28,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private Context mContext = this;
     private Handler mHandler;
-    private int mSelectedLevel = QuestionSeries.LEVEL_3;
+    private int mSelectedLevel;
     private QuestionSeries mQuestionSeries;
     private Runnable mNextQuestionTask = new Runnable() {
         @Override
@@ -79,6 +81,12 @@ public class MainActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            mSelectedLevel = intent.getIntExtra("IntentLevel", QuestionSeries.LEVEL_3);
+        }
+
         initParts();
         mHandler = new Handler();
 
@@ -297,9 +305,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void showStartDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-        alertDialogBuilder.setTitle("よーい");
-        alertDialogBuilder.setMessage("れべる " + this.mSelectedLevel);
-        alertDialogBuilder.setPositiveButton("すたーと", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setTitle(R.string.ready);
+        Resources res = getResources();
+        alertDialogBuilder.setMessage(res.getString(R.string.level) + " " + this.mSelectedLevel);
+        alertDialogBuilder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setQuestion();
@@ -312,16 +321,16 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void showFinishedDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-        alertDialogBuilder.setTitle("けっか");
+        alertDialogBuilder.setTitle(R.string.result);
         alertDialogBuilder.setMessage(getElapsedTimeFormat(mElapsedTime));
-        alertDialogBuilder.setPositiveButton("もういっかい", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.again, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 initQuestion();
                 showStartDialog();
             }
         });
-        alertDialogBuilder.setNegativeButton("やめる", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();

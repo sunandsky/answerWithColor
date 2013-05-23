@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">answerWithColor</string>
+    <string name="menu_settings">設定</string>
+    <string name="level">れべる</string>
+    <string name="level_1">れべる 1</string>
+    <string name="level_2">れべる 2</string>
+    <string name="level_3">れべる 3</string>
+    <string name="ready">よーい</string>
+    <string name="start">すたーと</string>
+    <string name="result">けっか</string>
+    <string name="again">もういっかい</string>
+    <string name="quit">やめる</string>
+    
+</resources>
